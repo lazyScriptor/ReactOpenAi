@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Nearby restaurants</title>
+    <script
+      async
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCOuOGDld8dMKAsvn06Sfxk6l6GLfru4jo&loading=async&libraries=places&callback=initMap"
+    ></script>
+    <script>
+      let map;
+      let markers = [];
+
+      async function initMap() {
+        const position = { lat: -25.344, lng: 131.031 };
+        const { Map } = await google.maps.importLibrary("maps");
+        const { AdvancedMarkerElement } = await google.maps.importLibrary(
+          "marker"
+        );
+
+        map = new Map(document.getElementById("map"), {
+          zoom: 15,
+          center: position,
+          mapId: "DEMO_MAP_ID",
+        });
+
+        // Initialize
+        var input = document.getElementById("searchTextField");
+        let autocomplete = new google.maps.places.Autocomplete(input);
+        autocomplete.bindTo("bounds", map);
+
+        // place selection
+        autocomplete.addListener("place_changed", () => {
+          const place = autocomplete.getPlace();
+          if (!place.geometry || !place.geometry.location) {
+            console.error("No location found for place:", place);
+            return;
+          }
+
+          // Clear markers
+          clearMarkers();
+
+          // Add marker for selected place
+          const marker = new AdvancedMarkerElement({
+            map: map,
+            position: place.geometry.location,
+            title: place.name,
+          });
+
+          // markers to the array
+          markers.push(marker);
+
+          // set to selected location
+          map.panTo(place.geometry.location);
+        });
+      }
+
+      function clearMarkers() {
+        // Clears markers
+        markers.forEach(marker => {
+          marker.setMap(null);
+        });
+        markers = [];
+      }
+    </script>
+  </head>
+  <body>
+    <input id="searchTextField" type="text" size="50" />
+    <div id="map" style="height: 500px; width: 100vw"></div>
+  </body>
+</html>
