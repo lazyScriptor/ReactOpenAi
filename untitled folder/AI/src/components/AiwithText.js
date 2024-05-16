@@ -47,7 +47,7 @@ const AiwithText = () => {
     <div>
       <div style={{ display: "flex" }}>
         <input
-          placeholder="Search Food with Category using Generative AI"
+          placeholder="Enter your travelling desire"
           onChange={(e) => handleChangeSearch(e)}
         />
         <button style={{ marginLeft: "20px" }} onClick={() => handleClick()}>
